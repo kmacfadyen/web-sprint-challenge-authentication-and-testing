@@ -1,7 +1,10 @@
 const router = require('express').Router();
+const restricted = require('../middleware/restricted')
+const { JWT_SECRET } = require('../middleware/secrets')
+const bcrypt = require('bcryptjs')
 
 router.post('/register', (req, res) => {
-  res.end('implement register, please!');
+  // res.end('implement register, please!');
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -27,6 +30,7 @@ router.post('/register', (req, res) => {
     4- On FAILED registration due to the `username` being taken,
       the response body should include a string exactly as follows: "username taken".
   */
+    
 });
 
 router.post('/login', (req, res) => {
