@@ -3,8 +3,9 @@ const restricted = require('../middleware/restricted')
 const { JWT_SECRET } = require('../middleware/secrets')
 const bcrypt = require('bcryptjs')
 const { getById, createUser, getByUsername } = require('./authModel')
+const { validateUser, uniqueUser } = require('./authMiddleware')
 
-router.post('/register', async (req, res) => {
+router.post('/register', validateUser, uniqueUser, async (req, res, next) => {
   // res.end('implement register, please!');
   /*
     IMPLEMENT
@@ -31,28 +32,30 @@ router.post('/register', async (req, res) => {
     4- On FAILED registration due to the `username` being taken,
       the response body should include a string exactly as follows: "username taken".
   */
-    // try {
-      const { username, password } = req.body
-      if (!username || !password) {
-        return res.json({ status: 400, message: 'username and password required' })
-      }
-      const user = getByUsername(username)
+    try {
+      const { username, password } = req.newUser
+      // if (!username || !password) {
+      //   return res.json({ status: 400, message: 'username and password required' })
+      // }
 
-      if (user.length === 0) {
-        const hash = bcrypt.hashSync(password, 8)
-        const newlyCreatedUser = await createUser({ username: username, password: hash })
-        res.json(newlyCreatedUser)
-      }
-      else { 
-        res.status(400).json({ message: 'username taken'})
-      }
-    // }
-    // catch {
-
-    // }
+        let hash = bcrypt.hashSync(password, 8)
+        await createUser({ username: username, password: hash })
+          .then(result => {
+            return res.status(201).send({
+              id: result.id,
+              username: result.username,
+              password: result.password
+            })
+          })
+        // res.json(newlyCreatedUser)
+      
+    }
+    catch (err) {
+      next(err)
+    }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', validateUser, async (req, res, next) => {
   // res.end('implement login, please!');
   /*
     IMPLEMENT
@@ -77,15 +80,22 @@ router.post('/login', async (req, res) => {
     4- On FAILED login due to `username` not existing in the db, or `password` being incorrect,
       the response body should include a string exactly as follows: "invalid credentials".
   */
-      const { username, password } = req.newlyCreatedUser
-      if (!username || !password) {
-        return res.json({ status: 400, message: 'username and password required' })
+      let { username, password } = req.newUser
+      User.findBy({ username })
+        .then(([user]) => {
+          if (user && bcrypt.compareSync(password, user.password)) {
+            const token = buildToken(user)
+            return res.status(200).json({
+              message: `welcome ${username}`,
+              token
+            })
+          }
+          else {
+            res.json({ status: 401, message: 'invalid credentials' })
+          }
+        })
       }
-      const User = await getByUsername(username)
-      if (User.length === 1) {
-        
-      }
-});
+);
 
 function buildToken (user) {
   const payload = {
