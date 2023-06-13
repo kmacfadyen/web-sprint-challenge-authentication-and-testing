@@ -4,9 +4,7 @@ function validateUser (req, res, next) {
     const { username, password } = req.body
     if (!username || !password ||
         !username.trim() || !password.trim()) {
-            // return res.status(400).json({
-            next({    
-                status: 422,
+            return res.status(400).json({
                 message: 'username and password required'
             })
     }
