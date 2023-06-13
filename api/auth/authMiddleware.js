@@ -4,8 +4,8 @@ function validateUser (req, res, next) {
     const { username, password } = req.body
     if (!username || ! password ||
         !username.trim() || !password.trim()) {
-            return res.json({
-                status: 404,
+            return res.status(400).json({
+                // status: 400,
                 message: 'username and password required'
             })
     }
@@ -22,8 +22,8 @@ function uniqueUser (req, res, next) {
     User.getByUsername(req.newUser.username)
         .then(result => {
             if (result) {
-                return res.json({
-                    status: 400,
+                return res.status(400).json({
+                    // status: 400,
                     message: 'username taken'
                 })
             }
