@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const restricted = require('../middleware/restricted')
-const { JWT_SECRET } = require('../middleware/secrets')
+const { JWT_SECRET } = require('../middleware/secrets/secret')
 const bcrypt = require('bcryptjs')
 const { getById, createUser, getByUsername } = require('./authModel')
 const { validateUser, uniqueUser } = require('./authMiddleware')
