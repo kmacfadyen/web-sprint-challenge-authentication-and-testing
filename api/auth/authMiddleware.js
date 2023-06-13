@@ -2,10 +2,11 @@ const User = require('./authModel')
 
 function validateUser (req, res, next) {
     const { username, password } = req.body
-    if (!username || ! password ||
+    if (!username || !password ||
         !username.trim() || !password.trim()) {
-            return res.status(400).json({
-                // status: 400,
+            // return res.status(400).json({
+            next({    
+                status: 422,
                 message: 'username and password required'
             })
     }
