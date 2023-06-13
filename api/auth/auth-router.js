@@ -2,7 +2,8 @@ const router = require('express').Router();
 const restricted = require('../middleware/restricted')
 const { JWT_SECRET } = require('../middleware/secrets/secret')
 const bcrypt = require('bcryptjs')
-const { getById, createUser, getByUsername } = require('./authModel')
+// const { getById, createUser, getByUsername } = require('./authModel')
+const User = require('./authModel')
 const { validateUser, uniqueUser } = require('./authMiddleware')
 
 router.post('/register', validateUser, uniqueUser, async (req, res, next) => {
@@ -33,20 +34,16 @@ router.post('/register', validateUser, uniqueUser, async (req, res, next) => {
       the response body should include a string exactly as follows: "username taken".
   */
     try {
-      const { username, password } = req.newUser
+      const { username, password } = req.body
       // if (!username || !password) {
       //   return res.json({ status: 400, message: 'username and password required' })
       // }
 
         let hash = bcrypt.hashSync(password, 8)
-        await createUser({ username: username, password: hash })
-          .then(result => {
-            return res.status(201).send({
-              id: result.id,
-              username: result.username,
-              password: result.password
-            })
-          })
+        const newUser = await User.createUser({ username, password: hash })
+
+        res.status(201).json(newUser)
+          
         // res.json(newlyCreatedUser)
       
     }
