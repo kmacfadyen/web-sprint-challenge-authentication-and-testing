@@ -98,6 +98,7 @@ router.post('/login', validateUser, async (req, res, next) => {
     catch (err) {
       next(err)
     }
+  }
 );
 
 function buildToken (user) {
