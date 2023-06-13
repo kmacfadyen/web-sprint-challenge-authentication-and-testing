@@ -48,7 +48,8 @@ router.post('/register', validateUser, uniqueUser, async (req, res, next) => {
       
     }
     catch (err) {
-      next(err)
+      // next(err)
+      res.status(400).json({ message: err.message })
     }
 });
 

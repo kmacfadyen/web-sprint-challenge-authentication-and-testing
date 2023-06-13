@@ -23,7 +23,7 @@ function uniqueUser (req, res, next) {
         .then(result => {
             if (result) {
                 return res.json({
-                    status: 404,
+                    status: 400,
                     message: 'username taken'
                 })
             }
