@@ -18,25 +18,25 @@ function validateUser (req, res, next) {
     }    
 }
 
-const uniqueUser = async (req, res, next) => {
-    // User.getByUsername(req.newUser.username)
-    //     .then(result => {
-    //         if (result) {
-    //             res.json({
-    //                 status: 404,
-    //                 message: 'username taken'
-                    
-    //             })
-    //         }
-    //     })
-    const { username } = req.body
-    const notUniqueUser = await dbConfig('users').where({username}).first()
-    if (!notUniqueUser) {
-        next()
-    }
-    else {
-        next({ status: 400, message: 'invalid credentials' })
-    }
+function uniqueUser (req, res, next) {
+    User.getByUsername(req.newUser.username)
+        .then(result => {
+            if (result) {
+                return res.json({
+                    status: 404,
+                    message: 'username taken'
+                })
+            }
+            next()
+        })
+    // const { username } = req.body
+    // const notUniqueUser = dbConfig('users').where({username}).first()
+    // if (!notUniqueUser) {
+    //     next()
+    // }
+    // else {
+    //     next({ status: 400, message: 'invalid credentials' })
+    // }
 }
 
 module.exports = {
