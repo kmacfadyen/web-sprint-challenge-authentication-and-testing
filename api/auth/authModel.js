@@ -15,8 +15,7 @@ async function createUser(user) {
 
 async function getByUsername(username) {
     const newUser = await db('users')
-        .select('username', 'password', 'id')
-        .where(username)
+        .where('username', username)
         .first()
     return newUser    
 }
