@@ -19,7 +19,7 @@ function validateUser (req, res, next) {
 }
 
 function uniqueUser (req, res, next) {
-    User.find(req.newUser.username)
+    User.getByUsername(req.newUser.username)
         .then(result => {
             if (result) {
                 res.json({
