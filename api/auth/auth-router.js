@@ -103,7 +103,7 @@ router.post('/login', validateUser, async (req, res, next) => {
 
 function buildToken (user) {
   const payload = {
-    subject: user_id,
+    subject: user.id,
     username: user.username,
   }
   const options = {
