@@ -19,6 +19,7 @@ async function getByUsername(username) {
         .first()
     return newUser    
 }
+
 function findBy(filter) {
     return db('users').where(filter)
 }

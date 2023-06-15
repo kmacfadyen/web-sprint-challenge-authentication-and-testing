@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs')
 // const { getById, createUser, getByUsername } = require('./authModel')
 const User = require('./authModel')
 const { validateUser, uniqueUser } = require('./authMiddleware')
+const jwt = require('jsonwebtoken')
 
 router.post('/register', validateUser, uniqueUser, async (req, res, next) => {
   // res.end('implement register, please!');
@@ -60,7 +61,7 @@ router.post('/login', validateUser, async (req, res, next) => {
       const [user] = await User.findBy({ username })
           if (user && bcrypt.compareSync(password, user.password)) {
             const token = buildToken(user)
-            res.status(200).json({
+            return res.status(200).json({
               message: `welcome, ${user.username}`,
               token
             })
