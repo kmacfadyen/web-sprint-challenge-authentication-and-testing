@@ -39,7 +39,7 @@ router.post('/register', validateUser, uniqueUser, async (req, res, next) => {
       // if (!username || !password) {
       //   return res.json({ status: 400, message: 'username and password required' })
       // }
-
+      console.log(username, password)
         let hash = bcrypt.hashSync(password, 8)
         const newUser = await User.createUser({ username, password: hash })
 
